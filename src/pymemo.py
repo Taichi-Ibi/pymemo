@@ -1,7 +1,32 @@
 import os
 from pathlib import Path
 
-MEMO_PATH = Path.cwd().parent / "data" / "pymemo.txt"
+
+class PyMemo:
+    path = Path.cwd().parent / "data" / "pymemo.txt"
+
+    def __init__(self) -> None:
+        self.path.touch(exist_ok=True)
+        self.memos = readsets(self.path)
+
+    def show(self) -> None:
+        printm(self.memos)
+
+    def find(self, *chars) -> None:
+        printm(match(self.memos, chars))
+
+    def write(self, *chars) -> None:
+        self.memos = self.memos | set(chars)
+        writesets(self.path, self.memos)
+
+    def clear(self) -> None:
+        writeblank(self.path)
+        self.memos = set()
+
+    def delete(self, *chars) -> None:
+        self.memos = self.memos - match(self.memos, chars)
+        writeblank(self.path)
+        self.write(*self.memos)
 
 
 def match(memos, chars) -> set:
@@ -33,29 +58,3 @@ def printm(memos) -> None:
     tex = ("\n").join(sorted(memos))
     if tex:
         print(tex)
-
-
-class PyMemo:
-    def __init__(self) -> None:
-        self.path = MEMO_PATH
-        self.path.touch(exist_ok=True)
-        self.memos = readsets(self.path)
-
-    def show(self) -> None:
-        printm(self.memos)
-
-    def find(self, *chars) -> None:
-        printm(match(self.memos, chars))
-
-    def write(self, *chars) -> None:
-        self.memos = self.memos | set(chars)
-        writesets(self.path, self.memos)
-
-    def clear(self) -> None:
-        writeblank(self.path)
-        self.memos = set()
-
-    def delete(self, *chars) -> None:
-        self.memos = self.memos - match(self.memos, chars)
-        writeblank(self.path)
-        self.write(*self.memos)
