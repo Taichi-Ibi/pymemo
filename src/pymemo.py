@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+MEMO_PATH = Path.cwd().parent / "data" / "pymemo.txt"
+
 
 def match(memos, chars) -> set:
     _memos = memos
@@ -35,7 +37,7 @@ def printm(memos) -> None:
 
 class PyMemo:
     def __init__(self) -> None:
-        self.path = Path.home() / ".pymemo"
+        self.path = MEMO_PATH
         self.path.touch(exist_ok=True)
         self.memos = readsets(self.path)
 
